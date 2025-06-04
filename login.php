@@ -1,4 +1,5 @@
 <?php
+require 'cors.php';
 session_start();
 require 'db.php';
 

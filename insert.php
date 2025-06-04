@@ -1,20 +1,26 @@
 <?php
+require 'cors.php';
 require 'auth.php';
 require 'db.php';
 
-$data = json_decode(file_get_contents("php://input"));
+$andar = $_POST['andar'] ?? '';
+$localizacao = $_POST['localizacao'] ?? '';
+$tipo = $_POST['tipo'] ?? '';
 
-$andar = $data->andar;
-$localizacao = $data->localizacao;
-$tipo = $data->tipo;
+if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+    $uploadDir = 'uploads/';
+    $filename = basename($_FILES['imagem']['name']);
+    $uploadPath = $uploadDir . $filename;
 
-$sql = "INSERT INTO extintores (andar, localizacao, tipo) VALUES (?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $andar, $localizacao, $tipo);
-
-if ($stmt->execute()) {
-    echo json_encode(["message" => "Extintor cadastrado com sucesso"]);
+    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $uploadPath)) {
+        $sql = "INSERT INTO extintores (andar, localizacao, tipo, imagem) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssss", $andar, $localizacao, $tipo, $uploadPath);
+        $stmt->execute();
+        echo json_encode(["message" => "Extintor inserido com imagem"]);
+    } else {
+        echo json_encode(["error" => "Falha ao mover imagem"]);
+    }
 } else {
-    echo json_encode(["error" => "Erro ao cadastrar"]);
+    echo json_encode(["error" => "Imagem não enviada"]);
 }
-?>
