@@ -11,7 +11,7 @@ $senha = $data->senha;
 // Criptografar senha
 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO usuarios (nome, email, senha, admin) VALUES (?, ?, ?, false)";
+$sql = "INSERT INTO usuarios (nome, email, senha, admin) VALUES (?, ?, ?, 0)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("sss", $nome, $email, $senha_hash);
 
