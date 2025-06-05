@@ -20,7 +20,8 @@ if ($result->num_rows === 1) {
     
     if (password_verify($senha, $user['senha'])) {
         $_SESSION['user_id'] = $user['id'];
-        echo json_encode(["message" => "Login bem-sucedido", "usuario" => $user['nome']]);
+        $_SESSION['admin'] = (bool) $user['admin'];
+        echo json_encode(["message" => "Login bem-sucedido", "usuario" => $user['nome'], "admin" => $_SESSION['admin']]);
     } else {
         echo json_encode(["error" => "Senha incorreta"]);
     }

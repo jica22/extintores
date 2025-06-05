@@ -1,6 +1,7 @@
 <?php
 require 'cors.php';
 require 'auth.php';
+require 'admin.php';
 require 'db.php';
 
 $id = $_GET['id'];
